@@ -1,71 +1,76 @@
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class TrainConsistManagementAppTest {
 
-    static class InvalidCapacityException extends Exception {
-        public InvalidCapacityException(String message) {
+    static class CargoSafetyException extends RuntimeException {
+        public CargoSafetyException(String message) {
             super(message);
         }
     }
 
-    static class PassengerBogie {
-        String type;
-        int capacity;
+    static class GoodsBogie {
+        String shape;
+        String cargo;
 
-        PassengerBogie(String type, int capacity) throws InvalidCapacityException {
-            if (capacity <= 0) {
-                throw new InvalidCapacityException("Capacity must be greater than zero");
+        GoodsBogie(String shape) {
+            this.shape = shape;
+        }
+
+        void assignCargo(String cargo) {
+            try {
+                if (shape.equals("Rectangular") && cargo.equalsIgnoreCase("Petroleum")) {
+                    throw new CargoSafetyException("Unsafe cargo assignment!");
+                }
+                this.cargo = cargo;
+            } catch (CargoSafetyException e) {
+            } finally {
             }
-            this.type = type;
-            this.capacity = capacity;
         }
     }
 
     @Test
-    public void testException_ValidCapacityCreation() throws InvalidCapacityException {
-        PassengerBogie bogie = new PassengerBogie("Sleeper", 72);
+    public void testCargo_SafeAssignment() {
+        GoodsBogie bogie = new GoodsBogie("Cylindrical");
+        bogie.assignCargo("Petroleum");
 
-        assertEquals("Sleeper", bogie.type);
-        assertEquals(72, bogie.capacity);
-    }
-
-    @Test(expected = InvalidCapacityException.class)
-    public void testException_NegativeCapacityThrowsException() throws InvalidCapacityException {
-        new PassengerBogie("Sleeper", -10);
-    }
-
-    @Test(expected = InvalidCapacityException.class)
-    public void testException_ZeroCapacityThrowsException() throws InvalidCapacityException {
-        new PassengerBogie("AC Chair", 0);
+        assertEquals("Petroleum", bogie.cargo);
     }
 
     @Test
-    public void testException_ExceptionMessageValidation() {
-        try {
-            new PassengerBogie("First Class", 0);
-        } catch (InvalidCapacityException e) {
-            assertEquals("Capacity must be greater than zero", e.getMessage());
-        }
+    public void testCargo_UnsafeAssignmentHandled() {
+        GoodsBogie bogie = new GoodsBogie("Rectangular");
+        bogie.assignCargo("Petroleum");
+
+        assertNull(bogie.cargo);
     }
 
     @Test
-    public void testException_ObjectIntegrityAfterCreation() throws InvalidCapacityException {
-        PassengerBogie bogie = new PassengerBogie("First Class", 24);
+    public void testCargo_CargoNotAssignedAfterFailure() {
+        GoodsBogie bogie = new GoodsBogie("Rectangular");
+        bogie.assignCargo("Petroleum");
 
-        assertEquals("First Class", bogie.type);
-        assertEquals(24, bogie.capacity);
+        assertNull(bogie.cargo);
     }
 
     @Test
-    public void testException_MultipleValidBogiesCreation() throws InvalidCapacityException {
-        PassengerBogie bogie1 = new PassengerBogie("Sleeper", 72);
-        PassengerBogie bogie2 = new PassengerBogie("AC Chair", 56);
+    public void testCargo_ProgramContinuesAfterException() {
+        GoodsBogie b1 = new GoodsBogie("Rectangular");
+        b1.assignCargo("Petroleum");
 
-        assertEquals("Sleeper", bogie1.type);
-        assertEquals(72, bogie1.capacity);
-        assertEquals("AC Chair", bogie2.type);
-        assertEquals(56, bogie2.capacity);
+        GoodsBogie b2 = new GoodsBogie("Cylindrical");
+        b2.assignCargo("Petroleum");
+
+        assertEquals("Petroleum", b2.cargo);
+    }
+
+    @Test
+    public void testCargo_FinallyBlockExecution() {
+        GoodsBogie bogie = new GoodsBogie("Rectangular");
+        bogie.assignCargo("Petroleum");
+
+        assertNull(bogie.cargo);
     }
 }
