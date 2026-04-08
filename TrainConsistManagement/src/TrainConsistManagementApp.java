@@ -1,42 +1,32 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class TrainConsistManagementApp {
 
-    static class Bogie {
-        String name;
-        int capacity;
-
-        Bogie(String name, int capacity) {
-            this.name = name;
-            this.capacity = capacity;
-        }
-    }
-
     public static void main(String[] args) {
 
+        Scanner scanner = new Scanner(System.in);
+
         System.out.println("======================================");
-        System.out.println("UC10 - Count Total Seats in Train");
+        System.out.println("UC11 - Validate Train ID and Cargo Code");
         System.out.println("======================================\n");
 
-        List<Bogie> bogies = new ArrayList<>();
+        System.out.print("Enter Train ID (Format: TRN-1234): ");
+        String trainId = scanner.nextLine();
 
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("First Class", 24));
-        bogies.add(new Bogie("Sleeper", 70));
+        System.out.print("Enter Cargo Code (Format: PET-AB): ");
+        String cargoCode = scanner.nextLine();
 
-        System.out.println("Bogies in Train:");
-        for (Bogie b : bogies) {
-            System.out.println(b.name + " -> " + b.capacity);
-        }
+        String trainIdRegex = "TRN-\\d{4}";
+        String cargoCodeRegex = "PET-[A-Z]{2}";
 
-        int totalSeats = bogies.stream()
-                .map(b -> b.capacity)
-                .reduce(0, Integer::sum);
+        boolean isTrainIdValid = Pattern.matches(trainIdRegex, trainId);
+        boolean isCargoCodeValid = Pattern.matches(cargoCodeRegex, cargoCode);
 
-        System.out.println("\nTotal Seating Capacity of Train: " + totalSeats);
+        System.out.println("\nValidation Results:");
+        System.out.println("Train ID Valid: " + isTrainIdValid);
+        System.out.println("Cargo Code Valid: " + isCargoCodeValid);
 
-        System.out.println("\nUC10 aggregation completed...");
+        System.out.println("\nUC11 validation completed...");
     }
 }
