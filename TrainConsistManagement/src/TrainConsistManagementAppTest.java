@@ -1,61 +1,52 @@
 import org.junit.Test;
 import static org.junit.Assert.assertArrayEquals;
+import java.util.Arrays;
 
 public class TrainConsistManagementAppTest {
 
-    // Bubble sort method for testing
-    private int[] bubbleSort(int[] arr) {
-        int[] a = arr.clone();
-
-        for (int i = 0; i < a.length - 1; i++) {
-            for (int j = 0; j < a.length - i - 1; j++) {
-                if (a[j] > a[j + 1]) {
-                    int temp = a[j];
-                    a[j] = a[j + 1];
-                    a[j + 1] = temp;
-                }
-            }
-        }
+    private String[] sortNames(String[] arr) {
+        String[] a = arr.clone();
+        Arrays.sort(a);
         return a;
     }
 
     @Test
-    public void testSort_BasicSorting() {
-        int[] input = {72, 56, 24, 70, 60};
-        int[] expected = {24, 56, 60, 70, 72};
+    public void testSort_BasicAlphabeticalSorting() {
+        String[] input = {"Sleeper", "AC Chair", "First Class", "General", "Luxury"};
+        String[] expected = {"AC Chair", "First Class", "General", "Luxury", "Sleeper"};
 
-        assertArrayEquals(expected, bubbleSort(input));
+        assertArrayEquals(expected, sortNames(input));
+    }
+
+    @Test
+    public void testSort_UnsortedInput() {
+        String[] input = {"Luxury", "General", "Sleeper", "AC Chair"};
+        String[] expected = {"AC Chair", "General", "Luxury", "Sleeper"};
+
+        assertArrayEquals(expected, sortNames(input));
     }
 
     @Test
     public void testSort_AlreadySortedArray() {
-        int[] input = {24, 56, 60, 70, 72};
-        int[] expected = {24, 56, 60, 70, 72};
+        String[] input = {"AC Chair", "First Class", "General"};
+        String[] expected = {"AC Chair", "First Class", "General"};
 
-        assertArrayEquals(expected, bubbleSort(input));
+        assertArrayEquals(expected, sortNames(input));
     }
 
     @Test
-    public void testSort_DuplicateValues() {
-        int[] input = {72, 56, 56, 24};
-        int[] expected = {24, 56, 56, 72};
+    public void testSort_DuplicateBogieNames() {
+        String[] input = {"Sleeper", "AC Chair", "Sleeper", "General"};
+        String[] expected = {"AC Chair", "General", "Sleeper", "Sleeper"};
 
-        assertArrayEquals(expected, bubbleSort(input));
+        assertArrayEquals(expected, sortNames(input));
     }
 
     @Test
     public void testSort_SingleElementArray() {
-        int[] input = {50};
-        int[] expected = {50};
+        String[] input = {"Sleeper"};
+        String[] expected = {"Sleeper"};
 
-        assertArrayEquals(expected, bubbleSort(input));
-    }
-
-    @Test
-    public void testSort_AllEqualValues() {
-        int[] input = {40, 40, 40};
-        int[] expected = {40, 40, 40};
-
-        assertArrayEquals(expected, bubbleSort(input));
+        assertArrayEquals(expected, sortNames(input));
     }
 }
