@@ -3,42 +3,39 @@ import static org.junit.Assert.*;
 
 public class TrainConsistManagementAppTest {
 
-    private boolean search(String[] arr, String key) {
-        for (String s : arr) {
-            if (s.equals(key)) {
-                return true;
-            }
+    boolean binarySearch(String[] arr, String key) {
+        java.util.Arrays.sort(arr);
+
+        int low = 0, high = arr.length - 1;
+
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            int res = key.compareTo(arr[mid]);
+
+            if (res == 0) return true;
+            else if (res > 0) low = mid + 1;
+            else high = mid - 1;
         }
         return false;
     }
 
     @Test
-    public void testSearch_BogieFound() {
-        String[] arr = {"BG101", "BG205", "BG309", "BG412", "BG550"};
-        assertTrue(search(arr, "BG309"));
+    public void testFound() {
+        assertTrue(binarySearch(new String[]{"BG101","BG205","BG309"}, "BG309"));
     }
 
     @Test
-    public void testSearch_BogieNotFound() {
-        String[] arr = {"BG101", "BG205", "BG309"};
-        assertFalse(search(arr, "BG999"));
+    public void testNotFound() {
+        assertFalse(binarySearch(new String[]{"BG101","BG205"}, "BG999"));
     }
 
     @Test
-    public void testSearch_FirstElementMatch() {
-        String[] arr = {"BG101", "BG205", "BG309"};
-        assertTrue(search(arr, "BG101"));
+    public void testSingleElement() {
+        assertTrue(binarySearch(new String[]{"BG101"}, "BG101"));
     }
 
     @Test
-    public void testSearch_LastElementMatch() {
-        String[] arr = {"BG101", "BG205", "BG550"};
-        assertTrue(search(arr, "BG550"));
-    }
-
-    @Test
-    public void testSearch_SingleElementArray() {
-        String[] arr = {"BG101"};
-        assertTrue(search(arr, "BG101"));
+    public void testEmptyArray() {
+        assertFalse(binarySearch(new String[]{}, "BG101"));
     }
 }
