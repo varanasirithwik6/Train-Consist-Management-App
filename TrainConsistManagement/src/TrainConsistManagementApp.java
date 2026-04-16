@@ -1,41 +1,31 @@
-import java.util.Arrays;
-
 public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
 
-        System.out.println("UC19 - Binary Search for Bogie ID\n");
+        System.out.println("UC20 - Exception Handling During Search\n");
 
-        String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
+        String[] bogieIds = {}; // empty array
+        String searchId = "BG101";
 
-        // Sort first (IMPORTANT)
-        Arrays.sort(bogieIds);
+        // Fail-fast check
+        if (bogieIds.length == 0) {
+            throw new IllegalStateException("No bogies available in train. Cannot perform search.");
+        }
 
-        String key = "BG309";
-
-        int low = 0;
-        int high = bogieIds.length - 1;
         boolean found = false;
 
-        while (low <= high) {
-            int mid = (low + high) / 2;
-
-            int result = key.compareTo(bogieIds[mid]);
-
-            if (result == 0) {
+        for (String id : bogieIds) {
+            if (id.equals(searchId)) {
                 found = true;
                 break;
-            } else if (result > 0) {
-                low = mid + 1;
-            } else {
-                high = mid - 1;
             }
         }
 
         if (found) {
-            System.out.println("Bogie " + key + " found using Binary Search.");
+            System.out.println("Bogie found.");
         } else {
             System.out.println("Bogie not found.");
         }
     }
 }
+
